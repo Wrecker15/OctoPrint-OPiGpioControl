@@ -170,7 +170,7 @@ class OPiGpioControlPlugin(
 
     def get_update_information(self):
         return dict(
-            gpiocontrol=dict(
+            opigpiocontrol=dict(
                 displayName="OPi GPIO Control",
                 displayVersion=self._plugin_version,
                 type="github_release",

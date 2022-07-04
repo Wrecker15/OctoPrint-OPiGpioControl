@@ -12,22 +12,22 @@ $(function () {
         self.gpioConfigurations = ko.observableArray();
 
         self.onBeforeBinding = function () {
-            self.gpioConfigurations(self.settings.settings.plugins.gpiocontrol.gpio_configurations.slice(0));
+            self.gpioConfigurations(self.settings.settings.plugins.opigpiocontrol.gpio_configurations.slice(0));
             self.updateGpioButtons();
         };
 
         self.onSettingsShown = function () {
-            self.gpioConfigurations(self.settings.settings.plugins.gpiocontrol.gpio_configurations.slice(0));
+            self.gpioConfigurations(self.settings.settings.plugins.opigpiocontrol.gpio_configurations.slice(0));
             self.updateIconPicker();
         };
 
         self.onSettingsHidden = function () {
-            self.gpioConfigurations(self.settings.settings.plugins.gpiocontrol.gpio_configurations.slice(0));
+            self.gpioConfigurations(self.settings.settings.plugins.opigpiocontrol.gpio_configurations.slice(0));
             self.updateGpioButtons();
         };
 
         self.onSettingsBeforeSave = function () {
-            self.settings.settings.plugins.gpiocontrol.gpio_configurations(self.gpioConfigurations.slice(0));
+            self.settings.settings.plugins.opigpiocontrol.gpio_configurations(self.gpioConfigurations.slice(0));
         };
 
         self.addGpioConfiguration = function () {
@@ -57,7 +57,7 @@ $(function () {
                 }
             }));
 
-            OctoPrint.simpleApiGet("gpiocontrol").then(function (states) {
+            OctoPrint.simpleApiGet("opigpiocontrol").then(function (states) {
                 self.gpioButtons().forEach(function (item, index) {
                     self.gpioButtons.replace(item, {
                         icon: item.icon,
@@ -69,13 +69,13 @@ $(function () {
         }
 
         self.turnGpioOn = function () {
-            OctoPrint.simpleApiCommand("gpiocontrol", "turnGpioOn", {id: self.gpioButtons.indexOf(this)}).then(function () {
+            OctoPrint.simpleApiCommand("opigpiocontrol", "turnGpioOn", {id: self.gpioButtons.indexOf(this)}).then(function () {
                 self.updateGpioButtons();
             });
         }
 
         self.turnGpioOff = function () {
-            OctoPrint.simpleApiCommand("gpiocontrol", "turnGpioOff", {id: self.gpioButtons.indexOf(this)}).then(function () {
+            OctoPrint.simpleApiCommand("opigpiocontrol", "turnGpioOff", {id: self.gpioButtons.indexOf(this)}).then(function () {
                 self.updateGpioButtons();
             });
         }
@@ -84,6 +84,6 @@ $(function () {
     OCTOPRINT_VIEWMODELS.push({
         construct: GpioControlViewModel,
         dependencies: ["settingsViewModel"],
-        elements: ["#settings_plugin_gpiocontrol", "#sidebar_plugin_gpiocontrol"]
+        elements: ["#settings_plugin_opigpiocontrol", "#sidebar_plugin_opigpiocontrol"]
     });
 });
