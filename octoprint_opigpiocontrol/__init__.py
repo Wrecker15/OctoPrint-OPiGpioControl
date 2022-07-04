@@ -54,7 +54,7 @@ class OPiGpioControlPlugin(
                 )
             )
 
-            pin = self.get_pin_number(int(configuration["pin"]))
+            pin = self.get_pin_number(configuration["pin"])
 
             if pin > 0:
                 GPIO.cleanup(pin)
@@ -71,7 +71,7 @@ class OPiGpioControlPlugin(
                 )
             )
 
-            pin = self.get_pin_number(int(configuration["pin"]))
+            pin = self.get_pin_number(configuration["pin"])
 
             if pin > 0:
                 GPIO.setup(pin, GPIO.OUT)
@@ -98,7 +98,7 @@ class OPiGpioControlPlugin(
                 )
             )
 
-            pin = self.get_pin_number(int(configuration["pin"]))
+            pin = self.get_pin_number(configuration["pin"])
 
             if pin != -1:
                 GPIO.setup(pin, GPIO.OUT)
@@ -122,7 +122,7 @@ class OPiGpioControlPlugin(
             return flask.make_response("Insufficient rights", 403)
 
         configuration = self._settings.get(["gpio_configurations"])[int(data["id"])]
-        pin = self.get_pin_number(int(configuration["pin"]))
+        pin = self.get_pin_number(configuration["pin"])
 
         if command == "getGpioState":
             if pin < 0:
@@ -152,7 +152,7 @@ class OPiGpioControlPlugin(
         states = []
 
         for configuration in self._settings.get(["gpio_configurations"]):
-            pin = self.get_pin_number(int(configuration["pin"]))
+            pin = self.get_pin_number(configuration["pin"])
 
             if pin < 0:
                 states.append("")
