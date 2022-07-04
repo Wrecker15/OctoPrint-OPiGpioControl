@@ -23,17 +23,17 @@ class OPiGpioControlPlugin(
         self.mode = GPIO.getmode()
 
         if self.mode is None:
-            self.mode = GPIO.BCM
+            self.mode = GPIO.BOARD
             GPIO.setmode(self.mode)
 
         self._logger.info("Detected GPIO mode: {}".format(self.mode))
 
     def get_template_configs(self):
         return [
-            dict(type="settings", custom_bindings=False),
+            dict(type="settings", custom_bindings=True),
             dict(
                 type="sidebar",
-                custom_bindings=True,
+                custom_bindings=False,
                 template="opigpiocontrol_sidebar.jinja2",
                 icon="sliders",
             ),
@@ -189,7 +189,7 @@ class OPiGpioControlPlugin(
                         comittish=["development", "master"],
                     )
                 ],
-                pip="https://github.com/TTLC198/OctoPrint-OpiGpioControl/archive/{target_version}.zip",
+                pip="https://github.com/TTLC198/OctoPrint-OPiGpioControl/archive/{target_version}.zip",
             )
         )
 

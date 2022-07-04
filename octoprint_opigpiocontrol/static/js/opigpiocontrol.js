@@ -5,7 +5,7 @@
  * License: AGPLv3
  */
 $(function () {
-    function GpioControlViewModel(parameters) {
+    function OPiGpioControlViewModel(parameters) {
         var self = this;
         self.settings = parameters[0];
         self.gpioButtons = ko.observableArray();
@@ -82,7 +82,7 @@ $(function () {
     }
 
     OCTOPRINT_VIEWMODELS.push({
-        construct: GpioControlViewModel,
+        construct: OPiGpioControlViewModel,
         dependencies: ["settingsViewModel"],
         elements: ["#settings_plugin_opigpiocontrol", "#sidebar_plugin_opigpiocontrol"]
     });
