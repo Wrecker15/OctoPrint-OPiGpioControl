@@ -125,6 +125,10 @@ class OPiGpioControlPlugin(
         pin = self.get_pin_number(configuration["pin"])
 
         if command == "getGpioState":
+            if configuration["active_mode"] == "active_low":
+                GPIO.output(pin, GPIO.LOW)
+            elif configuration["active_mode"] == "active_high":
+                GPIO.output(pin, GPIO.HIGH)
             if pin < 0:
                 return flask.jsonify("")
             elif configuration["active_mode"] == "active_low":
