@@ -1,7 +1,7 @@
 /*
  * View model for OctoPrint-OPiGpioControl
  *
- * Author: Damian Wójcik && TTLC198
+ * Author: Damian Wójcik & TTLC198
  * License: AGPLv3
  */
 $(function () {

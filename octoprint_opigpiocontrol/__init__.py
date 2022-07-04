@@ -5,7 +5,7 @@ from octoprint.server import user_permission
 import octoprint.plugin
 import flask
 import OPi.GPIO as GPIO
-
+import orangepi.pc
 
 class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
@@ -19,14 +19,9 @@ class OPiGpioControlPlugin(
 
     def on_startup(self, *args, **kwargs):
         GPIO.setwarnings(False)
+        GPIO.setmode(orangepi.pc.BOARD)
 
-        self.mode = GPIO.getmode()
-
-        if self.mode is None:
-            self.mode = GPIO.BOARD
-            GPIO.setmode(self.mode)
-
-        self._logger.info("Detected GPIO mode: {}".format(self.mode))
+        self._logger.info("Setup GPIO mode: {}".format(orangepi.pc.BOARD))
 
     def get_template_configs(self):
         return [
@@ -193,15 +188,40 @@ class OPiGpioControlPlugin(
             )
         )
 
-    PIN_MAPPINGS = [-1, -1, 3, 5, 7, 29, 31, 26, 24, 21, 19, 23, 32, 33, 8, 10, 36, 11, 12, 35, 38, 40, 15, 16, 18, 22, 37, 13]
+    PIN_MAPPINGS_PC = {
+        'PA12': 3,
+        'PA11': 5,
+        'PA6': 7,
+        'PA13': 8,
+        'PA14': 10,
+        'PA1': 11,
+        'PD14': 12,
+        'PA0': 13,
+        'PA3': 15,
+        'PC4': 16,
+        'PC7': 18,
+        'PC0': 19,
+        'PC1': 21,
+        'PA2': 22,
+        'PC2': 23,
+        'PC3': 24,
+        'PA21': 26,
+        'PA19': 27,
+        'PA18': 28,
+        'PA7': 29,
+        'PA8': 31,
+        'PG8': 32,
+        'PA9': 33,
+        'PA10': 35,
+        'PG9': 36,
+        'PA20': 37,
+        'PG6': 38,
+        'PG7': 40,
+    }
 
     def get_pin_number(self, pin):
-        if 2 <= pin <= 27:
-            if self.mode == GPIO.BCM:
-                return pin
-
-            if self.mode == GPIO.BOARD:
-                return self.PIN_MAPPINGS[pin]
+        if pin in self.PIN_MAPPINGS_PC:
+            return self.PIN_MAPPINGS_PC[pin]
 
         return -1
 
