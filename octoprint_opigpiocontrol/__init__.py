@@ -75,7 +75,6 @@ class OPiGpioControlPlugin(
 
             if pin > 0:
                 GPIO.setup(pin, GPIO.OUT)
-
                 if configuration["active_mode"] == "active_low":
                     if configuration["default_state"] == "default_on":
                         GPIO.output(pin, GPIO.LOW)
@@ -102,7 +101,6 @@ class OPiGpioControlPlugin(
 
             if pin != -1:
                 GPIO.setup(pin, GPIO.OUT)
-
                 if configuration["active_mode"] == "active_low":
                     if configuration["default_state"] == "default_on":
                         GPIO.output(pin, GPIO.LOW)
@@ -125,10 +123,7 @@ class OPiGpioControlPlugin(
         pin = self.get_pin_number(configuration["pin"])
 
         if command == "getGpioState":
-            if configuration["active_mode"] == "active_low":
-                GPIO.output(pin, GPIO.LOW)
-            elif configuration["active_mode"] == "active_high":
-                GPIO.output(pin, GPIO.HIGH)
+            GPIO.setup(pin, GPIO.OUT)
             if pin < 0:
                 return flask.jsonify("")
             elif configuration["active_mode"] == "active_low":
@@ -138,7 +133,7 @@ class OPiGpioControlPlugin(
         elif command == "turnGpioOn":
             if pin > 0:
                 self._logger.info("Turned on GPIO{}".format(configuration["pin"]))
-
+                GPIO.setup(pin, GPIO.OUT)
                 if configuration["active_mode"] == "active_low":
                     GPIO.output(pin, GPIO.LOW)
                 elif configuration["active_mode"] == "active_high":
@@ -146,7 +141,7 @@ class OPiGpioControlPlugin(
         elif command == "turnGpioOff":
             if pin > 0:
                 self._logger.info("Turned off GPIO{}".format(configuration["pin"]))
-
+                GPIO.setup(pin, GPIO.OUT)
                 if configuration["active_mode"] == "active_low":
                     GPIO.output(pin, GPIO.HIGH)
                 elif configuration["active_mode"] == "active_high":
@@ -157,7 +152,7 @@ class OPiGpioControlPlugin(
 
         for configuration in self._settings.get(["gpio_configurations"]):
             pin = self.get_pin_number(configuration["pin"])
-
+            GPIO.setup(pin, GPIO.OUT)
             if pin < 0:
                 states.append("")
             elif configuration["active_mode"] == "active_low":
