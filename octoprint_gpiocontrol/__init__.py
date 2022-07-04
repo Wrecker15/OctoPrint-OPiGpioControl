@@ -4,7 +4,7 @@ from octoprint.server import user_permission
 
 import octoprint.plugin
 import flask
-import RPi.GPIO as GPIO
+import OPi.GPIO as GPIO
 
 
 class GpioControlPlugin(
@@ -171,11 +171,11 @@ class GpioControlPlugin(
     def get_update_information(self):
         return dict(
             gpiocontrol=dict(
-                displayName="GPIO Control",
+                displayName="OPi GPIO Control",
                 displayVersion=self._plugin_version,
                 type="github_release",
-                user="catgiggle",
-                repo="OctoPrint-GpioControl",
+                user="TTLC198",
+                repo="OctoPrint-OPiGpioControl",
                 current=self._plugin_version,
                 stable_branch=dict(
                     name="Stable",
@@ -189,7 +189,7 @@ class GpioControlPlugin(
                         comittish=["development", "master"],
                     )
                 ],
-                pip="https://github.com/catgiggle/OctoPrint-GpioControl/archive/{target_version}.zip",
+                pip="https://github.com/TTLC198/OctoPrint-OpiGpioControl/archive/{target_version}.zip",
             )
         )
 
@@ -206,7 +206,7 @@ class GpioControlPlugin(
         return -1
 
 
-__plugin_name__ = "GPIO Control"
+__plugin_name__ = "OPi GPIO Control"
 __plugin_pythoncompat__ = ">=2.7,<4"
 
 
