@@ -1,4 +1,4 @@
 include README.md
-recursive-include octoprint_gpiocontrol/templates *
-recursive-include octoprint_gpiocontrol/translations *
-recursive-include octoprint_gpiocontrol/static *
+recursive-include octoprint_opigpiocontrol/templates *
+recursive-include octoprint_opigpiocontrol/translations *
+recursive-include octoprint_opigpiocontrol/static *

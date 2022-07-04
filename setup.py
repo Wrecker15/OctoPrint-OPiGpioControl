@@ -21,7 +21,7 @@ plugin_version = "1.0.8"
 plugin_description = """GPIO Control adds a sidebar with on/off buttons. You can add as many buttons as you want that will control each device connected to your Orange Pi."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Damian Wójcik && TTLC198"
+plugin_author = "TTLC198"
 
 # The plugin's author's mail address.
 plugin_author_email = "yorehacked@gmail.com"
