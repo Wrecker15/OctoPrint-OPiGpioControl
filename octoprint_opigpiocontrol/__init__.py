@@ -7,7 +7,7 @@ import flask
 import OPi.GPIO as GPIO
 
 
-class GpioControlPlugin(
+class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
     octoprint.plugin.TemplatePlugin,
     octoprint.plugin.AssetPlugin,
@@ -34,15 +34,15 @@ class GpioControlPlugin(
             dict(
                 type="sidebar",
                 custom_bindings=True,
-                template="gpiocontrol_sidebar.jinja2",
+                template="opigpiocontrol_sidebar.jinja2",
                 icon="map-signs",
             ),
         ]
 
     def get_assets(self):
         return dict(
-            js=["js/gpiocontrol.js", "js/fontawesome-iconpicker.min.js"],
-            css=["css/gpiocontrol.css", "css/fontawesome-iconpicker.min.css"],
+            js=["js/opigpiocontrol.js", "js/fontawesome-iconpicker.min.js"],
+            css=["css/opigpiocontrol.css", "css/fontawesome-iconpicker.min.css"],
         )
 
     def get_settings_defaults(self):
