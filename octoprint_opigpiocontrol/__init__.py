@@ -46,7 +46,7 @@ class OPiGpioControlPlugin(
     def on_settings_save(self, data):
         for configuration in self._settings.get(["gpio_configurations"]):
             self._logger.info(
-                "Cleaned GPIO{}: {},{} ({})".format(
+                "Cleaned GPIO {}: {},{} ({})".format(
                     configuration["pin"],
                     configuration["active_mode"],
                     configuration["default_state"],
@@ -63,7 +63,7 @@ class OPiGpioControlPlugin(
 
         for configuration in self._settings.get(["gpio_configurations"]):
             self._logger.info(
-                "Reconfigured GPIO{}: {},{} ({})".format(
+                "Reconfigured GPIO {}: {},{} ({})".format(
                     configuration["pin"],
                     configuration["active_mode"],
                     configuration["default_state"],
@@ -74,7 +74,7 @@ class OPiGpioControlPlugin(
             pin = self.get_pin_number(configuration["pin"])
 
             if pin > 0:
-                GPIO.setup(pin, GPIO.OUT)
+                self.init_pin(pin)
                 if configuration["active_mode"] == "active_low":
                     if configuration["default_state"] == "default_on":
                         GPIO.output(pin, GPIO.LOW)
@@ -89,7 +89,7 @@ class OPiGpioControlPlugin(
     def on_after_startup(self):
         for configuration in self._settings.get(["gpio_configurations"]):
             self._logger.info(
-                "Configured GPIO{}: {},{} ({})".format(
+                "Configured GPIO {}: {},{} ({})".format(
                     configuration["pin"],
                     configuration["active_mode"],
                     configuration["default_state"],
@@ -100,7 +100,7 @@ class OPiGpioControlPlugin(
             pin = self.get_pin_number(configuration["pin"])
 
             if pin != -1:
-                GPIO.setup(pin, GPIO.OUT)
+                self.init_pin(pin)
                 if configuration["active_mode"] == "active_low":
                     if configuration["default_state"] == "default_on":
                         GPIO.output(pin, GPIO.LOW)
@@ -123,7 +123,6 @@ class OPiGpioControlPlugin(
         pin = self.get_pin_number(configuration["pin"])
 
         if command == "getGpioState":
-            GPIO.setup(pin, GPIO.OUT)
             if pin < 0:
                 return flask.jsonify("")
             elif configuration["active_mode"] == "active_low":
@@ -132,16 +131,14 @@ class OPiGpioControlPlugin(
                 return flask.jsonify("on" if GPIO.input(pin) else "off")
         elif command == "turnGpioOn":
             if pin > 0:
-                self._logger.info("Turned on GPIO{}".format(configuration["pin"]))
-                GPIO.setup(pin, GPIO.OUT)
+                self._logger.info("Turned on GPIO {}".format(configuration["pin"]))
                 if configuration["active_mode"] == "active_low":
                     GPIO.output(pin, GPIO.LOW)
                 elif configuration["active_mode"] == "active_high":
                     GPIO.output(pin, GPIO.HIGH)
         elif command == "turnGpioOff":
             if pin > 0:
-                self._logger.info("Turned off GPIO{}".format(configuration["pin"]))
-                GPIO.setup(pin, GPIO.OUT)
+                self._logger.info("Turned off GPIO {}".format(configuration["pin"]))
                 if configuration["active_mode"] == "active_low":
                     GPIO.output(pin, GPIO.HIGH)
                 elif configuration["active_mode"] == "active_high":
@@ -152,7 +149,6 @@ class OPiGpioControlPlugin(
 
         for configuration in self._settings.get(["gpio_configurations"]):
             pin = self.get_pin_number(configuration["pin"])
-            GPIO.setup(pin, GPIO.OUT)
             if pin < 0:
                 states.append("")
             elif configuration["active_mode"] == "active_low":
@@ -223,6 +219,13 @@ class OPiGpioControlPlugin(
             return self.PIN_MAPPINGS_PC[pin]
 
         return -1
+
+    def init_pin(self, pin):
+        try:
+            GPIO.setup(pin, GPIO.OUT)
+        except RuntimeError:
+            GPIO.cleanup(pin)
+            GPIO.setup(pin, GPIO.OUT)
 
 
 __plugin_name__ = "OPi GPIO Control"
