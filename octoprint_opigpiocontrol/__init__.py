@@ -30,12 +30,12 @@ class OPiGpioControlPlugin(
 
     def get_template_configs(self):
         return [
-            dict(type="settings", custom_bindings=True),
+            dict(type="settings", custom_bindings=False),
             dict(
                 type="sidebar",
                 custom_bindings=True,
                 template="opigpiocontrol_sidebar.jinja2",
-                icon="map-signs",
+                icon="sliders",
             ),
         ]
 
@@ -212,7 +212,7 @@ __plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
     global __plugin_implementation__
-    __plugin_implementation__ = GpioControlPlugin()
+    __plugin_implementation__ = OPiGpioControlPlugin()
 
     global __plugin_hooks__
     __plugin_hooks__ = {
