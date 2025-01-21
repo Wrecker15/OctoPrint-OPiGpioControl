@@ -129,14 +129,15 @@ class OPiGpioControlPlugin(
     def on_api_command(self, command, data):
         if not user_permission.can():
             return flask.make_response("Insufficient rights", 403)
-
+    
         if command == "fetch_boards":
             boards_path = os.path.join(os.path.dirname(__file__), 'path_to_OPiGPIO_directory', 'orangepi')
             boards = []
             for file_name in os.listdir(boards_path):
                 if file_name.endswith('.py'):
                     boards.append(file_name.replace('.py', ''))
-            return json.dumps(boards)
+            return flask.jsonify(boards)
+  
 
         configuration = self._settings.get(["gpio_configurations"])[int(data["id"])]
         pin = self.get_pin_number(configuration["pin"])
