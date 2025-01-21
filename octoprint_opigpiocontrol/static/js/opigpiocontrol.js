@@ -10,10 +10,13 @@ $(function () {
         self.settings = parameters[0];
         self.gpioButtons = ko.observableArray();
         self.gpioConfigurations = ko.observableArray();
+        self.availableBoards = ko.observableArray(); // Observable array for available boards
+        self.selectedBoard = ko.observable(); // Observable for the selected board
 
         self.onBeforeBinding = function () {
             self.gpioConfigurations(self.settings.settings.plugins.opigpiocontrol.gpio_configurations.slice(0));
             self.updateGpioButtons();
+            self.fetchAvailableBoards(); // Fetch available boards on binding
         };
 
         self.onSettingsShown = function () {
@@ -66,19 +69,27 @@ $(function () {
                     });
                 });
             });
-        }
+        };
 
         self.turnGpioOn = function () {
             OctoPrint.simpleApiCommand("opigpiocontrol", "turnGpioOn", {id: self.gpioButtons.indexOf(this)}).then(function () {
                 self.updateGpioButtons();
             });
-        }
+        };
 
         self.turnGpioOff = function () {
             OctoPrint.simpleApiCommand("opigpiocontrol", "turnGpioOff", {id: self.gpioButtons.indexOf(this)}).then(function () {
                 self.updateGpioButtons();
             });
-        }
+        };
+
+        self.fetchAvailableBoards = function () {
+            OctoPrint.simpleApiCommand("opigpiocontrol", "fetch_boards", {}).done(function(response) {
+                self.availableBoards(response);
+            }).fail(function() {
+                console.error("Failed to fetch boards");
+            });
+        };
     }
 
     OCTOPRINT_VIEWMODELS.push({
