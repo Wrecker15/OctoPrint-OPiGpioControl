@@ -4,6 +4,7 @@ from octoprint.server import user_permission
 
 import octoprint.plugin
 import flask
+import json
 import OPi.GPIO as GPIO
 import orangepi.pc
 
@@ -114,6 +115,9 @@ class OPiGpioControlPlugin(
 
     def get_api_commands(self):
         return dict(turnGpioOn=["id"], turnGpioOff=["id"], getGpioState=["id"])
+        return dict(
+            fetch_boards=[]
+        )
 
     def on_api_command(self, command, data):
         if not user_permission.can():
@@ -121,7 +125,15 @@ class OPiGpioControlPlugin(
 
         configuration = self._settings.get(["gpio_configurations"])[int(data["id"])]
         pin = self.get_pin_number(configuration["pin"])
-
+        
+        if command == "fetch_boards":
+            boards_path = os.path.join(os.path.dirname(__file__), 'path_to_OPiGPIO_directory', 'orangepi')
+            boards = []
+            for file_name in os.listdir(boards_path):
+                if file_name.endswith('.py'):
+                    boards.append(file_name.replace('.py', ''))
+            return json.dumps(boards)
+            
         if command == "getGpioState":
             if pin < 0:
                 return flask.jsonify("")
