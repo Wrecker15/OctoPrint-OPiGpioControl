@@ -85,11 +85,12 @@ $(function () {
 
         self.fetchAvailableBoards = function () {
             OctoPrint.simpleApiCommand("opigpiocontrol", "fetch_boards", {}).done(function(response) {
+                console.log("Fetched boards:", response); // Add this line for debugging
                 self.availableBoards(response);
             }).fail(function() {
                 console.error("Failed to fetch boards");
-            });
-        };
+        });
+    };
     }
 
     OCTOPRINT_VIEWMODELS.push({
