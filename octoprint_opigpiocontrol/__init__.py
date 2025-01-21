@@ -5,7 +5,7 @@ from octoprint.server import user_permission
 import octoprint.plugin
 import flask
 import OPi.GPIO as GPIO
-import orangepi.pc
+import orangepi.zero2 as orangepi
 
 class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
@@ -19,9 +19,9 @@ class OPiGpioControlPlugin(
 
     def on_startup(self, *args, **kwargs):
         GPIO.setwarnings(False)
-        GPIO.setmode(orangepi.pc.BOARD)
+        GPIO.setmode(orangepi.BOARD)
 
-        self._logger.info("Setup GPIO mode: {}".format(orangepi.pc.BOARD))
+        self._logger.info("Setup GPIO mode: {}".format(orangepi.BOARD))
 
     def get_template_configs(self):
         return [
@@ -164,12 +164,12 @@ class OPiGpioControlPlugin(
                 displayName="OPi GPIO Control",
                 displayVersion=self._plugin_version,
                 type="github_release",
-                user="TTLC198",
+                user="Wrecker15",
                 repo="OctoPrint-OPiGpioControl",
                 current=self._plugin_version,
                 stable_branch=dict(
                     name="Stable",
-                    branch="master",
+                    branch="OPi-Zero2",
                     comittish=["master"],
                 ),
                 prerelease_branches=[
@@ -182,36 +182,25 @@ class OPiGpioControlPlugin(
                 pip="https://github.com/TTLC198/OctoPrint-OPiGpioControl/archive/{target_version}.zip",
             )
         )
-
-    PIN_MAPPINGS_PC = {
-        'PA12': 3,
-        'PA11': 5,
-        'PA6': 7,
-        'PA13': 8,
-        'PA14': 10,
-        'PA1': 11,
-        'PD14': 12,
-        'PA0': 13,
-        'PA3': 15,
-        'PC4': 16,
-        'PC7': 18,
-        'PC0': 19,
-        'PC1': 21,
-        'PA2': 22,
-        'PC2': 23,
-        'PC3': 24,
-        'PA21': 26,
-        'PA19': 27,
-        'PA18': 28,
-        'PA7': 29,
-        'PA8': 31,
-        'PG8': 32,
-        'PA9': 33,
-        'PA10': 35,
-        'PG9': 36,
-        'PA20': 37,
-        'PG6': 38,
-        'PG7': 40,
+    # Orange Pi Zero 2 physical board pin to GPIO pin
+    PIN_MAPPINGS = {
+        3:    229,   # PH5/I2C3_SDA
+        5:    228,   # PH4/I2C3_SCK
+        7:    73,    # PC9
+        8:    226,   # PH2/UART5_TX
+        10:   227,   # PH3/UART5_RX
+        11:   70,    # PC6
+        12:   75,    # PC11
+        13:   69,    # PC5
+        15:   72,    # PC8
+        16:   79,    # PC15
+        18:   78,    # PC14
+        19:   231,   # PH7,SPI1_MOSI
+        21:   232,   # PH8,SPI1_MISO
+        22:   71,    # PC7
+        23:   230,   # PH6,SPI1_CLK
+        24:   233,   # PH9,SPI1_CS
+        26:   74,    # PC10
     }
 
     def get_pin_number(self, pin):
