@@ -5,7 +5,7 @@ from octoprint.server import user_permission
 import octoprint.plugin
 import flask
 import orangepi.zero2
-from OPi import GPIO
+from OPi import GPIO as GPIO
 
 
 class OPiGpioControlPlugin(
