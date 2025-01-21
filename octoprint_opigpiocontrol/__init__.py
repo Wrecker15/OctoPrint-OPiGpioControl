@@ -4,8 +4,9 @@ from octoprint.server import user_permission
 
 import octoprint.plugin
 import flask
-import OPi.GPIO as GPIO
 import orangepi.zero2
+from OPi import GPIO
+
 
 class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
@@ -179,11 +180,11 @@ class OPiGpioControlPlugin(
                         comittish=["development", "master"],
                     )
                 ],
-                pip="https://github.com/TTLC198/OctoPrint-OPiGpioControl/archive/{target_version}.zip",
+                pip="https://github.com/Wrecker15/OctoPrint-OPiGpioControl/archive/{target_version}.zip",
             )
         )
     # Orange Pi Zero 2 physical board pin to GPIO pin
-    PIN_MAPPINGS = {
+    BOARD = {
         3:    229,   # PH5/I2C3_SDA
         5:    228,   # PH4/I2C3_SCK
         7:    73,    # PC9
@@ -202,6 +203,7 @@ class OPiGpioControlPlugin(
         24:   233,   # PH9,SPI1_CS
         26:   74,    # PC10
     }
+    BCM = BOARD
 
     def get_pin_number(self, pin):
         if pin in self.PIN_MAPPINGS_PC:
