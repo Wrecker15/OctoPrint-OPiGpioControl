@@ -5,7 +5,7 @@ from octoprint.server import user_permission
 import octoprint.plugin
 import flask
 import OPi.GPIO as GPIO
-import orangepi.zero2 as orangepi
+import orangepi.zero2
 
 class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
@@ -19,9 +19,9 @@ class OPiGpioControlPlugin(
 
     def on_startup(self, *args, **kwargs):
         GPIO.setwarnings(False)
-        GPIO.setmode(orangepi.BOARD)
+        GPIO.setmode(orangepi.zero2.BOARD)
 
-        self._logger.info("Setup GPIO mode: {}".format(orangepi.BOARD))
+        self._logger.info("Setup GPIO mode: {}".format(orangepi.zero2.BOARD))
 
     def get_template_configs(self):
         return [
