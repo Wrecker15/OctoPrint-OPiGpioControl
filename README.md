@@ -12,7 +12,7 @@ Very useful if you want to add some electronic/improvements to your printer.
 Install via the bundled [Plugin Manager](https://docs.octoprint.org/en/master/bundledplugins/pluginmanager.html)
 or manually using this URL:
 
-    https://github.com/TTLC198/OctoPrint-OPiGpioControl/archive/master.zip
+    https://github.com/Wrecker15/OctoPrint-OPiGpioControl/archive/master.zip
 
 ## Configuration
 
@@ -28,4 +28,4 @@ Just add correct GPIO configuration:
 
 ## Authors
 
-The main version of the plugin for Raspberry Pi was written by catgiggle, modified to work with Orange Pi boards by TTLC198.
+The main version of the plugin for Raspberry Pi was written by catgiggle, modified to work with Orange Pi boards by TTLC198, further modified to work on Orange Pi Zero2 by Wrecker15
