@@ -6,6 +6,16 @@
         <div class="span6"><h4>GPIO</h4></div>
     </div>
 
+    <!-- Board Selection Dropdown -->
+    <div class="row-fluid">
+        <div class="span12">
+            <label for="board-selection">Select Board Type:</label>
+            <select id="board-selection" class="span12" data-bind="value: selectedBoard, options: availableBoards, optionsText: 'name'">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+    </div>
+
     <div data-bind="foreach: gpioConfigurations">
         <div class="row-fluid gpiocontrol-settings-row">
             <div class="span2">
