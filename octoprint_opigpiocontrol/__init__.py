@@ -6,7 +6,8 @@ import octoprint.plugin
 import flask
 import json
 import OPi.GPIO as GPIO
-import orangepi.pc
+import importlib
+import os
 
 class OPiGpioControlPlugin(
     octoprint.plugin.StartupPlugin,
@@ -17,12 +18,15 @@ class OPiGpioControlPlugin(
     octoprint.plugin.RestartNeedingPlugin,
 ):
     mode = None
+    board_module = None
 
     def on_startup(self, *args, **kwargs):
         GPIO.setwarnings(False)
-        GPIO.setmode(orangepi.pc.BOARD)
+        selected_board = self._settings.get(["selected_board"])
+        self.board_module = importlib.import_module(f"orangepi.{selected_board}")
+        GPIO.setmode(self.board_module.BOARD)
 
-        self._logger.info("Setup GPIO mode: {}".format(orangepi.pc.BOARD))
+        self._logger.info("Setup GPIO mode: {}".format(self.board_module.BOARD))
 
     def get_template_configs(self):
         return [
@@ -42,7 +46,10 @@ class OPiGpioControlPlugin(
         )
 
     def get_settings_defaults(self):
-        return dict(gpio_configurations=[])
+        return dict(
+            gpio_configurations=[],
+            selected_board="pc",  # Default board
+        )
 
     def on_settings_save(self, data):
         for configuration in self._settings.get(["gpio_configurations"]):
@@ -114,8 +121,8 @@ class OPiGpioControlPlugin(
                         GPIO.output(pin, GPIO.LOW)
 
     def get_api_commands(self):
-        return dict(turnGpioOn=["id"], turnGpioOff=["id"], getGpioState=["id"])
         return dict(
+            turnGpioOn=["id"], turnGpioOff=["id"], getGpioState=["id"],
             fetch_boards=[]
         )
 
@@ -123,9 +130,6 @@ class OPiGpioControlPlugin(
         if not user_permission.can():
             return flask.make_response("Insufficient rights", 403)
 
-        configuration = self._settings.get(["gpio_configurations"])[int(data["id"])]
-        pin = self.get_pin_number(configuration["pin"])
-        
         if command == "fetch_boards":
             boards_path = os.path.join(os.path.dirname(__file__), 'path_to_OPiGPIO_directory', 'orangepi')
             boards = []
@@ -133,7 +137,10 @@ class OPiGpioControlPlugin(
                 if file_name.endswith('.py'):
                     boards.append(file_name.replace('.py', ''))
             return json.dumps(boards)
-            
+
+        configuration = self._settings.get(["gpio_configurations"])[int(data["id"])]
+        pin = self.get_pin_number(configuration["pin"])
+        
         if command == "getGpioState":
             if pin < 0:
                 return flask.jsonify("")
@@ -195,41 +202,9 @@ class OPiGpioControlPlugin(
             )
         )
 
-    PIN_MAPPINGS_PC = {
-        'PA12': 3,
-        'PA11': 5,
-        'PA6': 7,
-        'PA13': 8,
-        'PA14': 10,
-        'PA1': 11,
-        'PD14': 12,
-        'PA0': 13,
-        'PA3': 15,
-        'PC4': 16,
-        'PC7': 18,
-        'PC0': 19,
-        'PC1': 21,
-        'PA2': 22,
-        'PC2': 23,
-        'PC3': 24,
-        'PA21': 26,
-        'PA19': 27,
-        'PA18': 28,
-        'PA7': 29,
-        'PA8': 31,
-        'PG8': 32,
-        'PA9': 33,
-        'PA10': 35,
-        'PG9': 36,
-        'PA20': 37,
-        'PG6': 38,
-        'PG7': 40,
-    }
-
     def get_pin_number(self, pin):
-        if pin in self.PIN_MAPPINGS_PC:
-            return self.PIN_MAPPINGS_PC[pin]
-
+        if pin in self.board_module.BOARD:
+            return self.board_module.BOARD[pin]
         return -1
 
     def init_pin(self, pin):
